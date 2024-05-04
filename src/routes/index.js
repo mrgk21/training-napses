@@ -12,7 +12,7 @@ const PORT = process.env.BACKEND_PORT ?? 3000
 app.listen(PORT, async () => {
     console.log("starting on port: ", PORT);
     try {
-        await db.sequelize.sync();
+        await db.sequelize.sync({force: true});
         console.log("db synced!")
     } catch (error) {   
         console.log("error", error);

@@ -26,13 +26,13 @@ const UserModel = dbInstance.define("User", {
     aadharId: {
         type: DataTypes.UUID,
         allowNull: true,
-        references: {
-            model: AadharCardModel,
-            key: "id"
-        }
+        // references: {
+        //     model: AadharCardModel,
+        //     key: "id"
+        // }
     }
 });
 
-// UserModel.hasOne(AadharCardModel, {as: "aadharId"});
+UserModel.hasOne(AadharCardModel, {as: "aadharNumber", onDelete: "cascade"});
 
 export default UserModel;

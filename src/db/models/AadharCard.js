@@ -20,6 +20,6 @@ const AadharCardModel = dbInstance.define("AadharCardDetails", {
     },
 });
 
-// AadharCardModel.belongsTo(UserModel, {as: "aadharId"})
+// AadharCardModel.belongsTo(UserModel, {foreignKey: "aadharId", onDelete: "cascade"})
 
 export default AadharCardModel;

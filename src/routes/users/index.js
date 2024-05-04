@@ -1,5 +1,6 @@
 import { Router } from "express";
 import AadharCardModel from "../../db/models/AadharCard.js";
+import AddressModel from "../../db/models/Address.js";
 import UserModel from "../../db/models/User.js";
 
 const userRouter = Router()
@@ -76,6 +77,25 @@ userRouter.put("/:id", async (req, res) => {
     }
 })
 
+userRouter.delete("/:id", async (req, res) => {
+    const {id} = req.params;
+
+    console.log({id});
+
+    try {
+        const user = await UserModel.findOne({wehere: {id}})
+        await AddressModel.destroy({where: {userId: id}})
+        await UserModel.destroy({where: { id }});
+        await AadharCardModel.destroy({where: {id: user.aadharId}})
+        return res.sendStatus(201)
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);
+        
+    }
+})
+
 userRouter.post("/:id/aadhar", async (req, res) => {
     const {id} = req.params;
     const {aadharNumber, name} = req.body;
@@ -89,12 +109,109 @@ userRouter.post("/:id/aadhar", async (req, res) => {
 
     try {
 
-            console.log({user});
         const data = await AadharCardModel.create({aadharNumber, name});
         await UserModel.update({aadharId: data.id}, {where: { id }})
-        
-
         return res.json({data});
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);
+        
+    }
+})
+
+userRouter.get("/:id/aadhar", async (req, res) => {
+    const {id} = req.params;
+
+    const user = await UserModel.findOne({where: {id}});
+    if(!user) return res.status(400).json({error: "User not found"});
+    if(!user.aadharId) return res.status(400).json({error: "User aadhar card not found"});
+
+    try {
+        const data = await AadharCardModel.findOne({where: {id: user.aadharId}});
+        return res.json({data})
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);
+        
+    }
+})
+
+userRouter.post("/:id/address", async (req, res) => {
+    const {id} = req.params;
+    const {name, street, city, country} = req.body;
+    
+    if(!street || !name || !city || !country)
+        return res.status(400).json({error: "Address data missing"})
+   
+    try {
+        const user = await UserModel.findOne({where: {id}});
+        if(!user) return res.status(400).json({error: "User not found"});
+ 
+        const data = await AddressModel.create({name, street, city, country, userId: id});
+        return res.json({data});
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);        
+    }
+})
+
+userRouter.get("/:id/address", async (req, res) => {
+    const {id} = req.params;
+    
+    try {
+        const user = await UserModel.findOne({where: {id}});
+        if(!user) return res.status(400).json({error: "User not found"});
+
+        const data = await AddressModel.findAll({where: {userId: id}});
+        return res.json({data})
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);
+        
+    }
+})
+
+userRouter.get("/:id/address/:addrId", async (req, res) => {
+    const {id, addrId} = req.params;
+   
+    try {
+        const addr = await AddressModel.findOne({where: {userId: id, id: addrId}});
+        if(!addr) return res.status(400).json({error: "Address not found"});
+
+        return res.json({data: addr});
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);        
+    }
+})
+
+userRouter.put("/:id/address/:addrId", async (req, res) => {
+    const {id, addrId} = req.params;
+
+    const {name, street, city, country} = req.body;
+    
+    const updationObj = {};
+    if(name) updationObj.name = name;
+    if(street) updationObj.street = street;
+    if(country) updationObj.country = country;
+    if(city) updationObj.city = city;
+
+    if(!Object.keys(updationObj).length) {
+        return res.status(400).json({
+            error: "Update fields cannot be empty"
+        })
+    }
+
+    try {
+        const user = await UserModel.findOne({where: {id}});
+        if(!user) return res.status(400).json({error: "User not found"});
+
+        const data = await AddressModel.update(updationObj, {where: {userId: id, id: addrId}});
+        return res.json({data})
         
     } catch (error) {
         console.log(error);
