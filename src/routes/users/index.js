@@ -1,5 +1,5 @@
 const {Router} = require("express")
-const {user: UserModel, address: AddressModel, AadharCard: AadharCardModel} = require("../../db2/models/index.js");
+const {user: UserModel, address: AddressModel, AadharCard: AadharCardModel} = require("src/db2/models/index.js");
 
 const userRouter = Router();
 
