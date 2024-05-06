@@ -1,5 +1,7 @@
 {
+    "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
         "source.organizeImports": "always"
     },
+    "prettier.tabWidth": 2
 }

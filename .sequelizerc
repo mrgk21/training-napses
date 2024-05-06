@@ -1,0 +1,10 @@
+require("@babel\register");
+
+const path = require('path');
+
+module.exports = {
+  'config': path.resolve('./build/db2/config', 'config.js'),
+  'models-path': path.resolve('./build/db2/models'),
+  'seeders-path': path.resolve('./build/db2/seeders'),
+  'migrations-path': path.resolve('./build/db2/migrations')
+}

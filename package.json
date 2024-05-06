@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon ./src/routes/index.js"
+    "dev": "tsc && node ./build/routes/index.js"
   },
   "author": "",
   "license": "ISC",
