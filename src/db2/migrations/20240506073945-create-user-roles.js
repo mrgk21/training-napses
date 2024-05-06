@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.createTable('userRoles', {
         id: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUID4,
+            defaultValue: DataTypes.UUIDV4,
             allowNull: false,
             primaryKey: true
         },
@@ -13,7 +13,7 @@ module.exports = {
             type: DataTypes.UUID,
             allowNull: false,
             references: {
-                model: "Role",
+                model: "Roles",
                 key: "id"
             }
         },

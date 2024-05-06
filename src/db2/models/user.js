@@ -2,7 +2,6 @@
 const {
   Model
 } = require('sequelize');
-const {aadharCard} = require('./index.js');
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
     /**
@@ -22,24 +21,11 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         primaryKey: true
     },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
     full_name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
     country_code: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-    mobile: {
         type: DataTypes.STRING,
         allowNull: false,
     },

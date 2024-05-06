@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   userRoles.init({
     id: {
         type: DataTypes.UUID,
-        defaultValue: DataTypes.UUID4,
+        defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true
     },
@@ -24,11 +24,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-            model: "Role",
+            model: "Roles",
             key: "id"
         }
     },
-    roleId: {
+    userId: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {

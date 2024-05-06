@@ -3,17 +3,17 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class aadharCard extends Model {
+  class AadharCard extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      
     }
   }
-  aadharCard.init({
+  AadharCard.init({
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     freezeTableName: true,
     tableName: "AadharCard",
-    modelName: 'aadharCard',
+    modelName: 'AadharCard',
   });
-  return aadharCard;
+  return AadharCard;
 };

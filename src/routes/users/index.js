@@ -1,5 +1,5 @@
 const {Router} = require("express")
-const {user: UserModel, address: AddressModel, aadharCard: AadharCardModel} = require("../../db2/models/index.js");
+const {user: UserModel, address: AddressModel, AadharCard: AadharCardModel} = require("../../db2/models/index.js");
 
 const userRouter = Router();
 
@@ -16,14 +16,14 @@ userRouter.get("/", async (req, res) => {
 })
 
 userRouter.post("/", async (req, res) => {
-    const {name, email, mobile, full_name, country_code} = req.body;
+    const {full_name, country_code} = req.body;
 
-    if(!name || !email || !mobile || !full_name || !country_code) {
+    if(!full_name || !country_code) {
         return res.status(400).json({error: "User data missing"})
     }
 
     try {
-        const data = await UserModel.create({name, email, mobile, full_name, country_code});
+        const data = await UserModel.create({full_name, country_code});
         return res.json({data})
         
     } catch (error) {
@@ -37,7 +37,7 @@ userRouter.get("/:id", async (req, res) => {
     const {id} = req.params;
     
     try {
-        const user = await UserModel.findOne({where: { id }});
+        const user = await UserModel.findOne({where: { id }, include: AadharCardModel });
         if(!user) return res.status(400).json({error: "User not found"});
 
         return res.json({data: user});
@@ -102,7 +102,7 @@ userRouter.post("/:id/aadhar", async (req, res) => {
         return res.status(400).json({error: "User data missing"})
     }
 
-    const user = await UserModel.findOne({where: {id, name}});
+    const user = await UserModel.findOne({where: {id}});
     if(!user) return res.status(400).json({error: "User not found"});
 
     try {
