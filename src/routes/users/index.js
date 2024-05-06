@@ -1,9 +1,7 @@
-import { Router } from "express";
-import AadharCardModel from "../../db/models/AadharCard.js";
-import AddressModel from "../../db/models/Address.js";
-import UserModel from "../../db/models/User.js";
+const {Router} = require("express")
+const {user: UserModel, address: AddressModel, aadharCard: AadharCardModel} = require("../../db2/models/index.js");
 
-const userRouter = Router()
+const userRouter = Router();
 
 userRouter.get("/", async (req, res) => {
     try {
@@ -18,14 +16,14 @@ userRouter.get("/", async (req, res) => {
 })
 
 userRouter.post("/", async (req, res) => {
-    const {name, email, mobile} = req.body;
+    const {name, email, mobile, full_name, country_code} = req.body;
 
-    if(!name || !email || !mobile) {
+    if(!name || !email || !mobile || !full_name || !country_code) {
         return res.status(400).json({error: "User data missing"})
     }
 
     try {
-        const data = await UserModel.create({name, email, mobile});
+        const data = await UserModel.create({name, email, mobile, full_name, country_code});
         return res.json({data})
         
     } catch (error) {
@@ -220,6 +218,4 @@ userRouter.put("/:id/address/:addrId", async (req, res) => {
     }
 })
 
-export default userRouter;
-
-
+module.exports = userRouter;

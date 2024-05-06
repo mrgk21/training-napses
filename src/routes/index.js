@@ -1,8 +1,8 @@
-import "dotenv/config";
-import express from "express";
+require("dotenv").config();
+const express = require("express");
 
-import db from "../db/models/index.js";
-import userRouter from "./users/index.js";
+const db = require("../db2/models/index.js")
+const userRouter = require("./users/index.js")
 const app = express();
 
 app.use(express.json())
@@ -12,8 +12,9 @@ const PORT = process.env.BACKEND_PORT ?? 3000
 app.listen(PORT, async () => {
     console.log("starting on port: ", PORT);
     try {
-        await db.sequelize.sync({force: true});
-        console.log("db synced!")
+        await db.sequelize.authenticate();
+        // await db.sequelize.sync({force: true});
+        console.log("db connected!")
     } catch (error) {   
         console.log("error", error);
     }
