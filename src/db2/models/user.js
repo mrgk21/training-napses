@@ -32,10 +32,19 @@ module.exports = (sequelize, DataTypes) => {
     aadharId:{
         type: DataTypes.UUID, 
         allowNull: true, 
-            references: {
-            model: "AadharCard",
-            key: "id"
+        references: {
+          model: "AadharCard",
+          key: "id"
        }
+    },
+    combo: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return `${this.full_name} - ${this.country_code}`
+      },
+      set() {
+        throw new Error("Do not try to set virtual fields")
+      }
     }
   }, {
     sequelize,

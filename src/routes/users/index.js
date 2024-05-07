@@ -1,5 +1,7 @@
 const {Router} = require("express")
-const {user: UserModel, address: AddressModel, AadharCard: AadharCardModel} = require("../../db2/models/index.js");
+const {user: UserModel, address: AddressModel, AadharCard: AadharCardModel, UserRoles: UserRolesModel, Roles: RolesModel} = require("../../db2/models/index.js");
+const { Op } = require("sequelize");
+const {validate: validateUUID} = require("uuid")
 
 const userRouter = Router();
 
@@ -33,65 +35,10 @@ userRouter.post("/", async (req, res) => {
     }
 })
 
-userRouter.get("/:id", async (req, res) => {
-    const {id} = req.params;
-    
-    try {
-        const user = await UserModel.findOne({where: { id }, include: AadharCardModel });
-        if(!user) return res.status(400).json({error: "User not found"});
-
-        return res.json({data: user});
-        
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json(error);
-        
-    }
-})
-
-userRouter.put("/:id", async (req, res) => {
-    const {id} = req.params;
-    const {name, mobile, email} = req.body;
-    
-    const updationObj = {};
-    if(name) updationObj.name = name;
-    if(mobile) updationObj.mobile = mobile;
-    if(email) updationObj.email = email;
-
-    if(!Object.keys(updationObj).length) {
-        return res.status(400).json({
-            error: "Update fields cannot be empty"
-        })
-    }
-
-    try {
-        await UserModel.update(updationObj, {where: { id }})
-        return res.sendStatus(201)
-        
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json(error);
-        
-    }
-})
-
-userRouter.delete("/:id", async (req, res) => {
-    const {id} = req.params;
-
-    console.log({id});
-
-    try {
-        const user = await UserModel.findOne({wehere: {id}})
-        await AddressModel.destroy({where: {userId: id}})
-        await UserModel.destroy({where: { id }});
-        await AadharCardModel.destroy({where: {id: user.aadharId}})
-        return res.sendStatus(201)
-        
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json(error);
-        
-    }
+userRouter.get("/roles", async (req, res) => {
+    console.log(RolesModel);    
+    const data = await RolesModel.findAll({})
+    return res.json(data);
 })
 
 userRouter.post("/:id/aadhar", async (req, res) => {
@@ -217,5 +164,117 @@ userRouter.put("/:id/address/:addrId", async (req, res) => {
         
     }
 })
+
+userRouter.post("/:id/roles", async (req, res) => {
+    const {id} = req.params;
+    const {roleId} = req.body;
+
+    try {
+        const user = await UserModel.findOne({id})
+        if(!user) return res.status(400).json({error: "User does not exist"})
+
+        const data = await UserRolesModel.create({userId: user.id, roleId: roleId})
+        return res.json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error})
+    }
+});
+
+userRouter.get("/:id/roles", async (req, res) => {
+    const {id} = req.params;
+
+    try {
+        const data = await UserRolesModel.findAll({where: {userId: id}, include: [{model: RolesModel}]})  
+        return res.json(data);
+    } catch (error) {
+        console.log(error);        
+        return res.status(500).json({error})
+    }
+})
+
+userRouter.put("/:id/roles", async (req, res) => {
+    const {id} = req.params;
+    const {roles} = req.body;
+
+    if(!Array.isArray(roles)) {
+        return res.status(500).json({error: "Invalid roles"})
+    }
+    for(const item of Object.values(roles)) {
+        if(typeof item !== "string" || !validateUUID(item)) {
+            return res.status(500).json({error: "Invalid roles"})
+        }
+    }
+
+    try {
+        const data = await UserRolesModel.destroy({where: {userId: id, id: { [Op.in]: roles}}})
+        return res.json(data);
+    } catch (error) {
+        console.log(error);        
+        return res.status(500).json({error})
+    }
+})
+
+userRouter.get("/:id", async (req, res) => {
+    const {id} = req.params;
+    
+    try {
+        const user = await UserModel.findOne({where: { id }, include: AadharCardModel });
+        if(!user) return res.status(400).json({error: "User not found"});
+
+        return res.json({data: user});
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);
+        
+    }
+})
+
+userRouter.put("/:id", async (req, res) => {
+    const {id} = req.params;
+    const {name, mobile, email} = req.body;
+    
+    const updationObj = {};
+    if(name) updationObj.name = name;
+    if(mobile) updationObj.mobile = mobile;
+    if(email) updationObj.email = email;
+
+    if(!Object.keys(updationObj).length) {
+        return res.status(400).json({
+            error: "Update fields cannot be empty"
+        })
+    }
+
+    try {
+        await UserModel.update(updationObj, {where: { id }})
+        return res.sendStatus(201)
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);
+        
+    }
+})
+
+userRouter.delete("/:id", async (req, res) => {
+    const {id} = req.params;
+
+    console.log({id});
+
+    try {
+        const user = await UserModel.findOne({wehere: {id}})
+        await AddressModel.destroy({where: {userId: id}})
+        await UserModel.destroy({where: { id }});
+        await AadharCardModel.destroy({where: {id: user.aadharId}})
+        return res.sendStatus(201)
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);
+        
+    }
+})
+
 
 module.exports = userRouter;
