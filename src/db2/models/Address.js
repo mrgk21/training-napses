@@ -1,56 +1,56 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class address extends Model {
+  class Address extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      const { User } = models;
+      this.belongsTo(User, {
+        foreignKey: "userId",
+      });
     }
   }
-  address.init({
-    id: {
+  Address.init(
+    {
+      id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         unique: true,
-        primaryKey: true
-    },
-    name: {
+        primaryKey: true,
+      },
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    street: {
+      },
+      street: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    city: {
+      },
+      city: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    country: {
+      },
+      country: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    userId: {
+      },
+      userId: {
         type: DataTypes.UUID,
         allowNull: false,
-        references: {
-            model: "User",
-            key: "id"
-        }
+      },
     },
-  }, {
-    sequelize,
-    freezeTableName: true,
-    tableName: 'Address',
-    modelName: 'address',
-  });
-  return address;
+    {
+      sequelize,
+      freezeTableName: true,
+      tableName: "Address",
+      modelName: "Address",
+    },
+  );
+  return Address;
 };

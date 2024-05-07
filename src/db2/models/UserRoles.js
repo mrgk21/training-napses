@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class UserRoles extends Model {
     /**
@@ -10,40 +8,38 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const {Roles} = models;
+      const { Roles, User } = models;
       this.belongsTo(Roles, {
-         foreignKey: "roleId",
+        foreignKey: "roleId",
+      });
+      this.belongsTo(User, {
+        foreignKey: "userId",
       });
     }
   }
-  UserRoles.init({
-    id: {
+  UserRoles.init(
+    {
+      id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
-    },
-    roleId: {
+      },
+      roleId: {
         type: DataTypes.UUID,
         allowNull: false,
-        // references: {
-        //     model: "Roles",
-        //     key: "id"
-        // }
-    },
-    userId: {
+      },
+      userId: {
         type: DataTypes.UUID,
         allowNull: false,
-        references: {
-            model: "User",
-            key: "id"
-        }
+      },
     },
-  }, {
-    sequelize,
-    freezeTableName: true,
-    tableName: "UserRoles",
-    modelName: 'UserRoles',
-  });
+    {
+      sequelize,
+      freezeTableName: true,
+      tableName: "UserRoles",
+      modelName: "UserRoles",
+    },
+  );
   return UserRoles;
 };
