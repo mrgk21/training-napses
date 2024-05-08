@@ -3,10 +3,12 @@ const express = require("express");
 
 const userRouter = require("./users");
 const db = require("../db2/models");
+const imageRouter = require("./images");
 const app = express();
 
 app.use(express.json());
 app.use("/users", userRouter);
+app.use("/images", imageRouter);
 
 const PORT = process.env.BACKEND_PORT ?? 3000;
 app.listen(PORT, async () => {

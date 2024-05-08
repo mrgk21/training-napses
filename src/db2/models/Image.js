@@ -1,15 +1,20 @@
-"use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
-  class AadharCard extends Model {
+  class Image extends Model {
     static associate(models) {
-      const { User } = models;
-      this.hasOne(User, {
-        foreignKey: "aadharId",
+      const { Comment } = models;
+      this.hasMany(Comment, {
+        foreignKey: "commentableId",
+        constraints: false,
+        scope: {
+          commentableType: "Image",
+        },
       });
     }
   }
-  AadharCard.init(
+
+  Image.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -18,22 +23,25 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         primaryKey: true,
       },
-      aadharNumber: {
+      url: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
       },
-      name: {
-        type: DataTypes.STRING,
+      height: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      width: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
     {
       sequelize,
       freezeTableName: true,
-      tableName: "AadharCard",
-      modelName: "AadharCard",
+      modelName: "Image",
+      tableName: "Image",
     },
   );
-  return AadharCard;
+  return Image;
 };

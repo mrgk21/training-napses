@@ -10,13 +10,15 @@ userRouter_aadhar.post("/", async (req, res) => {
 
   if (!aadharNumber || !name) return res.status(400).json({ error: "User data missing" });
 
-  const user = await UserModel.findOne({ where: { id } });
-  if (!user) return res.status(400).json({ error: "User not found" });
-  if (user.aadharId) return res.status(400).json({ error: "User aadhar already exists" });
-
   try {
-    const data = await AadharCardModel.create({ aadharNumber, name });
-    await UserModel.update({ aadharId: data.id }, { where: { id } });
+    const user = await UserModel.findOne({ where: { id } });
+    if (!user) return res.status(400).json({ error: "User not found" });
+    if (user.aadharId) return res.status(400).json({ error: "User aadhar already exists" });
+
+    // const data = await AadharCardModel.create({ aadharNumber, name });
+    // await UserModel.update({ aadharId: data.id }, { where: { id } });
+
+    const data = await user.createAadharCard({ aadharNumber, name });
     return res.json({ data });
   } catch (error) {
     console.log(error);
@@ -27,12 +29,12 @@ userRouter_aadhar.post("/", async (req, res) => {
 userRouter_aadhar.get("/", async (req, res) => {
   const { id } = req.params;
 
-  const user = await UserModel.findOne({ where: { id } });
-  if (!user) return res.status(400).json({ error: "User not found" });
-  if (!user.aadharId) return res.status(400).json({ error: "User aadhar card not found" });
-
   try {
-    const data = await AadharCardModel.findOne({ where: { id: user.aadharId } });
+    const user = await UserModel.findOne({ where: { id } });
+    if (!user) return res.status(400).json({ error: "User not found" });
+    if (!user.aadharId) return res.status(400).json({ error: "User aadhar card not found" });
+
+    const data = await user.getAadharCard();
     return res.json({ data });
   } catch (error) {
     console.log(error);

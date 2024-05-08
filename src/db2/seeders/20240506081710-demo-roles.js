@@ -1,17 +1,16 @@
-'use strict';
-const {v4: uuidv4} = require("uuid")
+"use strict";
+const { v4: uuidv4 } = require("uuid");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-
+  async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert("Roles", [
-        { name: "demo-admin", id: uuidv4(), createdAt: new Date(), updatedAt: new Date() },
-        { name: "demo-sales-rep", id: uuidv4(), createdAt: new Date(), updatedAt: new Date() },
-    ])
+      { name: "demo-admin", id: uuidv4(), createdAt: new Date(), updatedAt: new Date() },
+      { name: "demo-sales-rep", id: uuidv4(), createdAt: new Date(), updatedAt: new Date() },
+    ]);
   },
 
-  async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Roles", {name: /demo/i }, {})
-  }
+  async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("Roles", { name: /demo/i }, {});
+  },
 };

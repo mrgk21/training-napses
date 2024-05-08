@@ -1,16 +1,20 @@
-"use strict";
 const { Model } = require("sequelize");
-module.exports = (sequelize, DataTypes) => {
-  class Roles extends Model {
-    static associate(models) {
-      const { UserRoles } = models;
 
-      this.hasMany(UserRoles, {
-        foreignKey: "roleId",
+module.exports = (sequelize, DataTypes) => {
+  class Video extends Model {
+    static associate(models) {
+      const { Comment } = models;
+      this.hasMany(Comment, {
+        foreignKey: "commentableId",
+        constraints: false,
+        scope: {
+          commentableType: "Video",
+        },
       });
     }
   }
-  Roles.init(
+
+  Video.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -19,17 +23,21 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         primaryKey: true,
       },
-      name: {
+      url: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      duration: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
     {
       sequelize,
       freezeTableName: true,
-      tableName: "Roles",
-      modelName: "Roles",
+      modelName: "Video",
+      tableName: "Video",
     },
   );
-  return Roles;
+  return Video;
 };

@@ -15,10 +15,11 @@ userRouter_id.get("/", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const user = await UserModel.findOne({ where: { id }, include: [{ model: AadharCardModel }] });
+    const user = await UserModel.findOne({ where: { id } });
     if (!user) return res.status(400).json({ error: "User not found" });
 
-    return res.json({ data: user });
+    const aadhar = await user.getAadharCard();
+    return res.json({ data: { user, aadhar } });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
