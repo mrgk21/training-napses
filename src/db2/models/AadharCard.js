@@ -6,6 +6,8 @@ module.exports = (sequelize, DataTypes) => {
       const { User } = models;
       this.hasOne(User, {
         foreignKey: "aadharId",
+        onDelete: "CASCADE",
+        hooks: true,
       });
     }
   }
@@ -31,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       freezeTableName: true,
-      tableName: "AadharCard",
+      tableName: "AadharCardDetails",
       modelName: "AadharCard",
     },
   );

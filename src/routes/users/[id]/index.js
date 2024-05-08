@@ -55,7 +55,7 @@ userRouter_id.delete("/", async (req, res) => {
   try {
     const user = await UserModel.findOne({ wehere: { id } });
     await AddressModel.destroy({ where: { userId: id } });
-    await UserModel.destroy({ where: { id } });
+    await UserModel.destroy({ where: { id }, onDelete: "cascade", hooks: true });
     await AadharCardModel.destroy({ where: { id: user.aadharId } });
     return res.sendStatus(201);
   } catch (error) {

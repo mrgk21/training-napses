@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(AadharCard, {
         foreignKey: "aadharId",
         onDelete: "CASCADE",
+        hooks: true,
       });
     }
   }
@@ -30,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       country_code: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       aadharId: {
@@ -50,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       freezeTableName: true,
-      tableName: "User",
+      tableName: "Users",
       modelName: "User",
     },
   );
