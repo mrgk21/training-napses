@@ -31,8 +31,8 @@ imageRouter.post("/:id/comments", async (req, res) => {
     const image = await ImageModel.findOne({ id });
     if (!image) return res.status(400).json({ error: "image does not exist" });
 
-    // const comment = await image.createComment({ text });
-    const comment = await CommentModel.create({ text });
+    const comment = await image.createComment({ text });
+    // const comment = await CommentModel.create({ text });
     await image.addComment(comment);
 
     return res.json({ data: comment });

@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const db = require("../../../db2/models");
-const { User: UserModel, AadharCard: AadharCardModel } = db;
+const { User: UserModel } = db;
 
 const userRouter_aadhar = new Router({ mergeParams: true });
 

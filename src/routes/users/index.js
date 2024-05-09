@@ -2,7 +2,7 @@ const { Router } = require("express");
 const userRouter_id = require("./[id]/index.js");
 const db = require("../../db2/models/index.js");
 
-const { User: UserModel, Roles: RolesModel } = db;
+const { User: UserModel, Role: RolesModel } = db;
 
 const userRouter = Router({ mergeParams: true });
 userRouter.use("/:id", userRouter_id);

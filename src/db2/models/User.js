@@ -3,8 +3,8 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      const { UserRoles, Address, AadharCard } = models;
-      this.hasMany(UserRoles, {
+      const { UserRole, Address, AadharCard } = models;
+      this.hasMany(UserRole, {
         foreignKey: "userId",
       });
       this.hasMany(Address, {
@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       freezeTableName: true,
-      tableName: "Users",
+      tableName: "User",
       modelName: "User",
     },
   );

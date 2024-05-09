@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const db = require("../../../db2/models");
 
-const { user: UserModel, UserRoles: UserRolesModel, Roles: RolesModel } = db;
+const { user: UserModel, UserRole: UserRolesModel, Role: RolesModel } = db;
 
 const userRouter_roles = Router({ mergeParams: true });
 
